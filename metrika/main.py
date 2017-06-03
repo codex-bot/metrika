@@ -13,8 +13,8 @@ class Metrika:
         self.sdk.log("Metrika module initialized")
 
         self.sdk.register_commands([
-            ('metrika_help', 'help', CommandHelp(self.sdk).help),
-            ('metrika_start', 'start', CommandStart(self.sdk).start)
+            ('metrika_help', 'help', CommandHelp(self.sdk)),
+            ('metrika_start', 'start', CommandStart(self.sdk))
         ])
 
         self.sdk.set_routes([
