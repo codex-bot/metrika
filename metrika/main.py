@@ -18,7 +18,7 @@ class Metrika:
         ])
 
         self.sdk.set_routes([
-            # ('POST', '/metrika/{user_token}', self.metrika_route_handler)
+            #('POST', '/metrika/callback', self.metrika_route_handler)
         ])
 
         self.sdk.start_server()
@@ -26,4 +26,3 @@ class Metrika:
 
 if __name__ == "__main__":
     metrika = Metrika()
-

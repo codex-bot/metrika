@@ -29,4 +29,4 @@ DB = {
 APPLICATION_TOKEN = ''
 
 # OAuth Yandex.Metrika app token
-METRIKA_OAUTH_APP_ID = '0448c01cc02e47c898e91b5d9c226ea3'
+METRIKA_OAUTH_APP_ID = ''
