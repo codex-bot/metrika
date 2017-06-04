@@ -1,7 +1,8 @@
 from sdk.codexbot_sdk import CodexBot
-from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
+from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER, USERS_COLLECTION_NAME
 from commands.help import CommandHelp
 from commands.start import CommandStart
+
 
 class Metrika:
 
@@ -26,17 +27,41 @@ class Metrika:
     async def metrika_route_handler(self, request):
         # self.sdk.log("Callback from yandex.metrika auth with request {}".format(request))
 
-        print(request['query'])
+        if 'code' not in request['query']:
+            self.sdk.log("Metrika route handler: code is missed")
+            return {
+                'status': 404
+            }
 
+        if 'state' not in request['query']:
+            self.sdk.log("Metrika route handler: user_token in state is missed")
+            return {
+                'status': 404
+            }
+
+        user_token = request['query']['state']
+
+        # Get user data from DB by user token
+        registered_chat = self.sdk.db.find_one(USERS_COLLECTION_NAME, {'user': user_token})
+
+        # Check if chat was registered
+        if not registered_chat or 'chat' not in registered_chat:
+            self.sdk.log("Metrika route handler: wrong user token passed")
+            return {
+                'status': 404
+            }
+
+        #
+        # TODO get access_token and save it
+        #
+
+        # Send notification
         message = "Авторизация прошла успешно."
 
-        self.sdk.log(message)
-
-        # await self.sdk.send_to_chat(
-        #     # payload["chat"],
-        #     '2JMAGGW9',
-        #     message
-        # )
+        await self.sdk.send_to_chat(
+            registered_chat['chat'],
+            message
+        )
 
         return {
             'text': 'OK!'

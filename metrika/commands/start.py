@@ -1,6 +1,8 @@
 from .base import CommandBase
-from config import METRIKA_OAUTH_APP_ID
+from config import METRIKA_OAUTH_APP_ID, USERS_COLLECTION_NAME
 import random
+import string
+from time import time
 
 class CommandStart(CommandBase):
 
@@ -8,16 +10,10 @@ class CommandStart(CommandBase):
     def generate_user_token():
         return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
 
-    """
-    We will store user-to-chat linking in this collection
-    _id | chat | user | dt_register
-    """
-    USERS_COLLECTION_NAME = 'users'
-
     async def __call__(self, payload):
         self.sdk.log("/start handler fired with payload {}".format(payload))
 
-        registered_chat = self.sdk.db.find_one(self.USERS_COLLECTION_NAME, {'chat': payload['chat']})
+        registered_chat = self.sdk.db.find_one(USERS_COLLECTION_NAME, {'chat': payload['chat']})
 
         if registered_chat:
             user_token = registered_chat['user']
