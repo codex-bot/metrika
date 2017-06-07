@@ -2,6 +2,9 @@ from .base import CommandBase
 
 
 class CommandStatistics(CommandBase):
+    """
+    Return statistics for /today, /weekly, /monthly
+    """
 
     async def today(self, payload):
 
@@ -15,7 +18,7 @@ class CommandStatistics(CommandBase):
                 "Для авторизации используйте /metrika_add"
             )
 
-        message = "Данные за текущий месяц\n\n"
+        message = "Данные за сегодняшний день\n\n"
 
         await self.sdk.send_to_chat(
             payload["chat"],

@@ -5,6 +5,14 @@ from events.base import EventBase
 
 
 class EventAuth(EventBase):
+    """
+    Process OAuth Event. Obtain access token and save it to DB.
+    1. Get code and state from request.
+    2. Send code and get access token from Yandex.
+    3. Insert pair (access_toke, chat_id) to DB 'metrika_tokens' if not exists
+    4. Build buttons list with counters for the access token.
+    5. Send success message
+    """
 
     async def __call__(self, request):
         if 'code' not in request['query']:
@@ -44,6 +52,11 @@ class EventAuth(EventBase):
 
     @staticmethod
     def get_counters(access_token):
+        """
+        Return counters list for the specific access token
+        :param access_token: string
+        :return: list(counters JSON)
+        """
         params = urlencode({
             'id': METRIKA_OAUTH_APP_ID,
             'oauth_token': access_token
@@ -68,6 +81,11 @@ class EventAuth(EventBase):
 
     @staticmethod
     def get_access_token(code):
+        """
+        Return access token in exchange for code
+        :param code: string
+        :return: access_token (JSON)
+        """
         url = 'https://oauth.yandex.ru/token'
         data = {
             'grant_type': 'authorization_code',

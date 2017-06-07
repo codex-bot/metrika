@@ -5,6 +5,7 @@ from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
 from commands.help import CommandHelp
 from commands.start import CommandStart
 
+
 class Metrika:
 
     def __init__(self):
@@ -27,6 +28,11 @@ class Metrika:
 
     @CodexBot.http_response
     async def route_handler(self, request):
+        """
+        Process callback from Yandex Metrika after oauth authentication.
+        :param request:
+        :return:
+        """
 
         result = await EventAuth(self.sdk)(request)
 
@@ -34,6 +40,7 @@ class Metrika:
             return {'text': 'OK'}
         else:
             return {'status': 404}
+
 
 if __name__ == "__main__":
     metrika = Metrika()
