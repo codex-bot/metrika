@@ -3,6 +3,8 @@ from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER, USERS_COLLEC
 from commands.help import CommandHelp
 from commands.start import CommandStart
 
+import requests
+from config import METRIKA_OAUTH_APP_ID, METRIKA_OAUTH_APP_SECRET
 
 class Metrika:
 
@@ -40,6 +42,7 @@ class Metrika:
             }
 
         user_token = request['query']['state']
+        code = request['query']['code']
 
         # Get user data from DB by user token
         registered_chat = self.sdk.db.find_one(USERS_COLLECTION_NAME, {'user': user_token})
@@ -51,9 +54,46 @@ class Metrika:
                 'status': 404
             }
 
-        #
-        # TODO get access_token and save it
-        #
+        ## <getting access_token> ##
+        # TODO move this to function
+        url = 'https://oauth.yandex.ru/token'
+        data = {
+            'grant_type': 'authorization_code',
+            'code': code,
+            'client_id': METRIKA_OAUTH_APP_ID,
+            'client_secret': METRIKA_OAUTH_APP_SECRET
+        }
+        headers = {
+            'Content-type': 'application/x-www-form-urlencoded'
+        }
+        r = requests.post(
+            url = url,
+            data = data,
+            headers = headers
+        )
+        response = r.json()
+
+        """
+        In 'response' or 'r.json()' u can find:
+        {
+            "token_type": "bearer",
+            "access_token": "AQAAAAACHQerAAR12345678abcd",
+            "expires_in": 31535975,
+            "refresh_token": "1:DOgz_PampAMPAM:UNder-MYSpac3:vatIsIT-gdeK0d"
+        }
+        """
+
+        # Is access_token exist
+        if not response or 'access_token' not in response:
+            self.sdk.log("Metrika route handler: no access_token in response")
+            return {
+                'status': 404
+            }
+        ## </getting access_token> ##
+
+        ## <saving access_token> ##
+        # TODO save this token_type
+        ## </saving access_token> ##
 
         # Send notification
         message = "Авторизация прошла успешно."
