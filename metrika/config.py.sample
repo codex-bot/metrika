@@ -27,3 +27,7 @@ DB = {
 
 # Token got from App Manager
 APPLICATION_TOKEN = ''
+
+# OAuth Yandex.Metrika app token
+METRIKA_OAUTH_APP_ID = ''
+METRIKA_OAUTH_APP_SECRET = ''
