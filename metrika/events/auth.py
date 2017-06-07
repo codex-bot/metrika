@@ -53,7 +53,8 @@ class EventAuth(EventBase):
     @staticmethod
     def get_counters(access_token):
         """
-        Return counters list for the specific access token
+        Return counters list for the specific access token.
+        Documentation: https://tech.yandex.com/metrika/doc/api2/management/counters/counters-docpage/
         :param access_token: string
         :return: list(counters JSON)
         """
@@ -82,7 +83,8 @@ class EventAuth(EventBase):
     @staticmethod
     def get_access_token(code):
         """
-        Return access token in exchange for code
+        Return access token in exchange for code.
+        Documentation: https://tech.yandex.ru/oauth/doc/dg/reference/auto-code-client-docpage/
         :param code: string
         :return: access_token (JSON)
         """
