@@ -24,7 +24,7 @@ class CommandStart(CommandBase):
                 'user': user_token,
                 'dt_register': time()
             }
-            self.sdk.db.insert(self.USERS_COLLECTION_NAME, new_chat)
+            self.sdk.db.insert(USERS_COLLECTION_NAME, new_chat)
             self.sdk.log("New user registered with token {}".format(user_token))
 
         message = "Перейдите по следующей ссылке для авторизации.\n" \

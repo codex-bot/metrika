@@ -1,3 +1,4 @@
+from commands.statistics import CommandStatistics
 from sdk.codexbot_sdk import CodexBot
 from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER, USERS_COLLECTION_NAME
 from commands.help import CommandHelp
@@ -16,7 +17,8 @@ class Metrika:
 
         self.sdk.register_commands([
             ('metrika_help', 'help', CommandHelp(self.sdk)),
-            ('metrika_start', 'start', CommandStart(self.sdk))
+            ('metrika_start', 'start', CommandStart(self.sdk)),
+            ('today', 'today', CommandStatistics(self.sdk).today)
         ])
 
         self.sdk.set_routes([
@@ -92,7 +94,11 @@ class Metrika:
         ## </getting access_token> ##
 
         ## <saving access_token> ##
-        # TODO save this token_type
+        if not self.sdk.db.find_one('metrika_tokens', {'access_token': response['access_token'], 'chat_id': registered_chat['chat']}):
+            self.sdk.db.insert('metrika_tokens', {
+                'access_token': response['access_token'],
+                'chat_id': registered_chat['chat']
+            })
         ## </saving access_token> ##
 
         # Send notification
