@@ -13,8 +13,19 @@ class InlineAddCounter(CommandBase):
             user_id = payload['user']
 
             counter_id = inline_params
-            oauth_token = self.get_access_token(user_id)
-            counter_name = self.get_counter_name(counter_id, oauth_token)
+            access_token = self.get_access_token(user_id)
+            if not access_token:
+                await self.sdk.send_text_to_chat(
+                    payload["chat"],
+                    "Ошибка получения токена доступа"
+                )
+
+            counter_name = self.get_counter_name(counter_id, access_token)
+            if not counter_name:
+                await self.sdk.send_text_to_chat(
+                    payload["chat"],
+                    "Ошибка получения имени счётчика"
+                )
 
             if self.sdk.db.find_one('metrika_counters', {'chat_id': chat_id, 'counter_id': counter_id}):
                 await self.sdk.send_text_to_chat(
