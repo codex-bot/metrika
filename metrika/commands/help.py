@@ -9,7 +9,7 @@ class CommandHelp(CommandBase):
         message = "Модуль для работы с сервисом Яндекс.Метрика.\n\n" \
                   "Чтобы начать, выполните команду /metrika_start."
 
-        await self.sdk.send_to_chat(
+        await self.sdk.send_text_to_chat(
             payload["chat"],
             message
         )
