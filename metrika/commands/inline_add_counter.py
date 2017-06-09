@@ -15,14 +15,14 @@ class InlineAddCounter(CommandBase):
             counter_id = inline_params
             access_token = self.get_access_token(user_id)
             if not access_token:
-                await self.sdk.send_text_to_chat(
+                return await self.sdk.send_text_to_chat(
                     payload["chat"],
                     "Ошибка получения токена доступа"
                 )
 
             counter_name = self.get_counter_name(counter_id, access_token)
             if not counter_name:
-                await self.sdk.send_text_to_chat(
+                return await self.sdk.send_text_to_chat(
                     payload["chat"],
                     "Ошибка получения имени счётчика"
                 )
