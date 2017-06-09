@@ -1,5 +1,6 @@
-from inline import InlineCommandsHandler
+from commands.subscribe import CommandSubscribe
 from commands.statistics import CommandStatistics
+from commands.unsubscribe import CommandUnsubscribe
 from events.auth import EventAuth
 from inline import InlineCommandsHandler
 from sdk.codexbot_sdk import CodexBot
@@ -19,7 +20,9 @@ class Metrika:
         self.sdk.register_commands([
             ('metrika_help', 'help', CommandHelp(self.sdk)),
             ('metrika_start', 'start', CommandStart(self.sdk)),
-            ('today', 'today', CommandStatistics(self.sdk).today)
+            ('today', 'today', CommandStatistics(self.sdk).today),
+            ('metrika_subscribe', 'metrika_subscribe', CommandSubscribe(self.sdk)),
+            ('metrika_unsubscribe', 'metrika_unsubscribe', CommandUnsubscribe(self.sdk))
         ])
 
         self.sdk.set_routes([
