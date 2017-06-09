@@ -16,9 +16,9 @@ class CommandStart(CommandBase):
                   "Для этого перейдите по ссылке и подтвердите доступ:\n" \
                   "\n" \
                   "https://oauth.yandex.ru/authorize?" \
-                  "response_type=code&client_id={}&state={}".format(METRIKA_OAUTH_APP_ID, payload["chat"])
+                  "response_type=code&client_id={}&state={}|{}".format(METRIKA_OAUTH_APP_ID, payload['chat'], payload["user"])
 
-        await self.sdk.send_to_chat(
+        await self.sdk.send_text_to_chat(
             payload["chat"],
             message
         )

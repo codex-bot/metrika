@@ -1,3 +1,4 @@
+from commands.keyboard import CommandInlineKeyboard
 from commands.statistics import CommandStatistics
 from events.auth import EventAuth
 from sdk.codexbot_sdk import CodexBot
@@ -23,6 +24,8 @@ class Metrika:
         self.sdk.set_routes([
             ('GET', '/metrika/callback', self.route_handler)
         ])
+
+        self.sdk.set_callback_query_handler(CommandInlineKeyboard(self.sdk))
 
         self.sdk.start_server()
 

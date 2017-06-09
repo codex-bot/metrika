@@ -8,10 +8,10 @@ class CommandStatistics(CommandBase):
 
     async def today(self, payload):
 
-        chat_records = list(self.sdk.db.find('metrika_tokens', {'chat_id': payload["chat"]}))
+        chat_records = list(self.sdk.db.find('metrika_tokens', {'user_id': payload["user"]}))
 
         if not len(chat_records):
-            return await self.sdk.send_to_chat(
+            return await self.sdk.send_text_to_chat(
                 payload["chat"],
                 "Не авторизован ни один пользователь\n" \
                 "\n" \

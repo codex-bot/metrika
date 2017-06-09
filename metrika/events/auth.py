@@ -1,3 +1,5 @@
+import json
+
 import requests
 from urllib.parse import urlencode
 from config import METRIKA_OAUTH_APP_ID, METRIKA_OAUTH_APP_SECRET
@@ -23,7 +25,7 @@ class EventAuth(EventBase):
             self.sdk.log("Metrika route handler: user_token in state is missed")
             return False
 
-        chat_id = request['query']['state']
+        chat_id, user_id = request['query']['state'].split("|")
         code = request['query']['code']
 
         try:
@@ -33,19 +35,20 @@ class EventAuth(EventBase):
             self.sdk.log("Error: {}".format(e))
             return False
         else:
-            if not self.sdk.db.find_one('metrika_tokens', {'access_token': access_token, 'chat_id': chat_id}):
+            if not self.sdk.db.find_one('metrika_tokens', {'access_token': access_token, 'user_id': user_id}):
                 self.sdk.db.insert('metrika_tokens', {
                     'access_token': access_token,
-                    'chat_id': chat_id
+                    'user_id': user_id
                 })
 
             # Show available counters to the chat
             counters = EventAuth.get_counters(access_token)
             self.sdk.log(counters)
-            # TODO: Show list of buttons
-            await self.sdk.send_to_chat(
+
+            await self.sdk.send_inline_keyboard_to_chat(
                 chat_id,
-                "Пользователь Яндекс.Метрика успешно добавлен."
+                "Выберите счетчик для подключения",
+                counters
             )
 
         return True
@@ -71,14 +74,19 @@ class EventAuth(EventBase):
                                        timeout=5
                                        ).json()
 
+            buttons_rows = []
             for counter in result_json['counters']:
+                buttons_rows.append([{
+                    'text': counter['name'],
+                    'callback_data': "{}|{}".format('add_counter', str(counter['id']))
+                }])
                 counters.append(counter)
 
         except Exception as e:
             print("There was an error: %r" % e)
             return []
 
-        return counters
+        return buttons_rows
 
     @staticmethod
     def get_access_token(code):
