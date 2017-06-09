@@ -80,7 +80,7 @@ class CommandStatistics(CommandBase):
         params = {
             'id': counter,
             'oauth_token': token,
-            'metrics': 'ym:s:visits,ym:s:users',
+            'metrics': 'ym:s:pageviews,ym:s:users',
             'date1': date1,
             'date2': 'today'
         }
