@@ -1,3 +1,4 @@
+apscheduler
 aioamqp==0.10.0
 requests
 aiohttp==2.0.7
