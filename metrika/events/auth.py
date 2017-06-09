@@ -74,9 +74,9 @@ class EventAuth(EventBase):
                                        timeout=5
                                        ).json()
 
-            buttons_rows = []
+            button_rows = []
             for counter in result_json['counters']:
-                buttons_rows.append([{
+                button_rows.append([{
                     'text': counter['name'],
                     'callback_data': "{}|{}".format('add_counter', str(counter['id']))
                 }])
@@ -86,7 +86,7 @@ class EventAuth(EventBase):
             print("There was an error: %r" % e)
             return []
 
-        return buttons_rows
+        return button_rows
 
     @staticmethod
     def get_access_token(code):

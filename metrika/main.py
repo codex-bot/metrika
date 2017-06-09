@@ -1,6 +1,7 @@
-from commands.keyboard import CommandInlineKeyboard
+from inline import InlineCommandsHandler
 from commands.statistics import CommandStatistics
 from events.auth import EventAuth
+from inline import InlineCommandsHandler
 from sdk.codexbot_sdk import CodexBot
 from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
 from commands.help import CommandHelp
@@ -25,7 +26,7 @@ class Metrika:
             ('GET', '/metrika/callback', self.route_handler)
         ])
 
-        self.sdk.set_callback_query_handler(CommandInlineKeyboard(self.sdk))
+        self.sdk.set_callback_query_handler(InlineCommandsHandler(self.sdk))
 
         self.sdk.start_server()
 
