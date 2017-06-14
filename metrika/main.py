@@ -7,6 +7,7 @@ from sdk.codexbot_sdk import CodexBot
 from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
 from commands.help import CommandHelp
 from commands.start import CommandStart
+from commands.metrika import CommandMetrika
 
 
 class Metrika:
@@ -18,6 +19,7 @@ class Metrika:
         self.sdk.log("Metrika module initialized")
 
         self.sdk.register_commands([
+            ('metrika', 'Приложение для Яндекс.Метрики. Умеет присылать статистику посещений сайтов.', CommandMetrika(self.sdk)),
             ('metrika_help', 'help', CommandHelp(self.sdk)),
             ('metrika_start', 'start', CommandStart(self.sdk)),
             ('metrika_subscribe', 'metrika_subscribe', CommandSubscribe(self.sdk)),

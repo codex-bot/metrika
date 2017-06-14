@@ -31,6 +31,13 @@ class CommandSubscribe(CommandBase):
 
             buttons.append(row)
 
+        buttons.append([
+            {
+                'text': 'Отписаться',
+                'callback_data': 'unsubscribe'
+            }
+        ])
+
         await self.sdk.send_inline_keyboard_to_chat(payload['chat'], 'Выберете время', buttons)
 
     async def subscribe(self, payload):
@@ -43,6 +50,10 @@ class CommandSubscribe(CommandBase):
         """
 
         time = payload['inline_params']
+
+        if not time:
+            await self.__call__(payload)
+            return
 
         result = self.sdk.scheduler.find(payload['chat'])
         if result and result['hour'] == time:

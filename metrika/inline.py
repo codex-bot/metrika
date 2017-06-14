@@ -1,5 +1,9 @@
 from commands.inline_add_counter import InlineAddCounter
 from commands.subscribe import CommandSubscribe
+from commands.unsubscribe import CommandUnsubscribe
+from commands.start import CommandStart
+from commands.help import CommandHelp
+
 
 class InlineCommandsHandler:
 
@@ -8,14 +12,23 @@ class InlineCommandsHandler:
 
         self.commands = {
             'add_counter': InlineAddCounter(self.sdk),
-            'subscribe': CommandSubscribe(self.sdk).subscribe
+            'subscribe': CommandSubscribe(self.sdk).subscribe,
+            'unsubscribe': CommandUnsubscribe(self.sdk),
+            'start': CommandStart(self.sdk),
+            'help': CommandHelp(self.sdk),
         }
 
     async def __call__(self, payload):
         self.sdk.log("Inline commands handler fired with payload {}".format(payload))
 
         try:
-            command, inline_params = payload['data'].split('|')
+            command_data = payload['data'].split('|')
+
+            command = command_data[0]
+            inline_params = None
+            if len(command_data) > 1:
+                inline_params = command_data[1]
+
             payload['inline_params'] = inline_params
             if command in self.commands:
                 await self.commands[command](payload)
