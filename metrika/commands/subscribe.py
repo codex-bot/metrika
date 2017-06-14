@@ -3,8 +3,17 @@ from .base import CommandBase
 
 
 class CommandSubscribe(CommandBase):
+    """
+    /metrika_subscribe command processor
+    Ask for time 18:00, 19:00, 20:00, 21:00, 22:00, 23:00 or 00:00
+    """
 
     async def __call__(self, payload):
+        """
+        Ask for appropriate time and send keyboard with options.
+        :param payload:
+        :return:
+        """
         self.sdk.log("/metrika_subscribe handler fired with payload {}".format(payload))
 
         buttons = []
@@ -25,6 +34,13 @@ class CommandSubscribe(CommandBase):
         await self.sdk.send_inline_keyboard_to_chat(payload['chat'], 'Выберете время', buttons)
 
     async def subscribe(self, payload):
+        """
+        Inline command for setting new scheduling time
+        :param payload:
+            - chat - chat ID
+            - inline_params - time in format HH:mm
+            - command - command for callback ('today', 'weekly', 'monthly')
+        """
 
         time = payload['inline_params']
 
