@@ -19,10 +19,10 @@ class CommandSubscribe(CommandBase):
         buttons = []
         time = 19
 
-        for i in range(0,3):
+        for rows in range(0,3):
             row = []
 
-            for j in range(0,2):
+            for cols in range(0,2):
                 row.append({
                     'text': '{}:00'.format(str(time % 24).zfill(2)),
                     'callback_data': 'subscribe|{}'.format(time % 24)
