@@ -2,6 +2,7 @@ from .base import CommandBase
 import requests
 from datetime import datetime, timedelta
 
+
 class CommandStatistics(CommandBase):
     """
     Return statistics for /today, /weekly, /monthly
@@ -16,7 +17,6 @@ class CommandStatistics(CommandBase):
         :param payload:
         :return:
         """
-
 
         counters = list(self.sdk.db.find('metrika_counters', {'chat_id': payload["chat"]}))
 
@@ -62,10 +62,10 @@ class CommandStatistics(CommandBase):
                        "{} уникальных посетителей\n" \
                        "{} просмотров\n\n".format(counter['counter_name'], int(users), int(hits))
 
-            await self.sdk.send_text_to_chat(
-                payload["chat"],
-                message
-            )
+        await self.sdk.send_text_to_chat(
+            payload["chat"],
+            message
+        )
 
     def get_stats(self, counter, token, date1):
         """
