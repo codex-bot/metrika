@@ -1,5 +1,5 @@
 from commands.inline_add_counter import InlineAddCounter
-
+from commands.subscribe import CommandSubscribe
 
 class InlineCommandsHandler:
 
@@ -7,7 +7,8 @@ class InlineCommandsHandler:
         self.sdk = sdk
 
         self.commands = {
-            'add_counter': InlineAddCounter(self.sdk)
+            'add_counter': InlineAddCounter(self.sdk),
+            'subscribe': CommandSubscribe(self.sdk).subscribe
         }
 
     async def __call__(self, payload):

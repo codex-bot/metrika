@@ -7,12 +7,32 @@ class CommandSubscribe(CommandBase):
     async def __call__(self, payload):
         self.sdk.log("/metrika_subscribe handler fired with payload {}".format(payload))
 
+        buttons = []
+        time = 19
+
+        for i in range(0,3):
+            row = []
+
+            for j in range(0,2):
+                row.append({
+                    'text': '{}:00'.format(time),
+                    'callback_data': 'subscribe|{}'.format(time)
+                })
+                time += 1
+
+            buttons.append(row)
+
+        await self.sdk.send_inline_keyboard_to_chat(payload['chat'], 'Выберете время', buttons)
+
+    async def subscribe(self, payload):
+
         schedule = self.sdk.db.find_one("metrika_schedules", {'chat_id': payload['chat']})
+        time = payload['inline_params']
 
         if schedule:
             await self.sdk.send_text_to_chat(
                 payload["chat"],
-                "Вы уже подписаны на ежедневный дайджест в 19:00"
+                "Вы уже подписаны на ежедневный дайджест в {}:00".format(time)
             )
         else:
             self.sdk.db.insert("metrika_schedules", {'chat_id': payload['chat']})
@@ -22,10 +42,10 @@ class CommandSubscribe(CommandBase):
                     CommandStatistics(self.sdk).stats,
                     args=[payload],
                     trigger='cron',
-                    hour='19',
+                    hour=time,
                     id=str(payload['chat']),
                     replace_existing=True)
             await self.sdk.send_text_to_chat(
                 payload["chat"],
-                "Вы успешно подписались на ежедневный дайджест в 19:00"
+                "Вы успешно подписались на ежедневный дайджест в {}:00".format(time)
             )
