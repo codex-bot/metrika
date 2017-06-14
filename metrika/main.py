@@ -1,5 +1,6 @@
-from inline import InlineCommandsHandler
+from commands.subscribe import CommandSubscribe
 from commands.statistics import CommandStatistics
+from commands.unsubscribe import CommandUnsubscribe
 from events.auth import EventAuth
 from inline import InlineCommandsHandler
 from sdk.codexbot_sdk import CodexBot
@@ -19,6 +20,8 @@ class Metrika:
         self.sdk.register_commands([
             ('metrika_help', 'help', CommandHelp(self.sdk)),
             ('metrika_start', 'start', CommandStart(self.sdk)),
+            ('metrika_subscribe', 'metrika_subscribe', CommandSubscribe(self.sdk)),
+            ('metrika_unsubscribe', 'metrika_unsubscribe', CommandUnsubscribe(self.sdk)),
             ('today', 'today', CommandStatistics(self.sdk).stats),
             ('weekly', 'weekly', CommandStatistics(self.sdk).stats),
             ('monthly', 'monthly', CommandStatistics(self.sdk).stats)
@@ -29,6 +32,8 @@ class Metrika:
         ])
 
         self.sdk.set_callback_query_handler(InlineCommandsHandler(self.sdk))
+
+        self.sdk.scheduler.restore(self.processor)
 
         self.sdk.start_server()
 
@@ -47,6 +52,8 @@ class Metrika:
         else:
             return {'status': 404}
 
+    def processor(self, params):
+        return CommandStatistics(self.sdk).stats
 
 if __name__ == "__main__":
     metrika = Metrika()
