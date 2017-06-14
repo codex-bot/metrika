@@ -15,8 +15,8 @@ class CommandSubscribe(CommandBase):
 
             for j in range(0,2):
                 row.append({
-                    'text': '{}:00'.format(time),
-                    'callback_data': 'subscribe|{}'.format(time)
+                    'text': '{}:00'.format(str(time % 24).zfill(2)),
+                    'callback_data': 'subscribe|{}'.format(time % 24)
                 })
                 time += 1
 
@@ -28,21 +28,21 @@ class CommandSubscribe(CommandBase):
 
         time = payload['inline_params']
 
-        if self.sdk.scheduler.find(payload['chat']):
+        result = self.sdk.scheduler.find(payload['chat'])
+        if result and result['hour'] == time:
             await self.sdk.send_text_to_chat(
                 payload["chat"],
                 "Вы уже подписаны на ежедневный дайджест в {}:00".format(time)
             )
         else:
             payload['command'] = 'today'
-            if not self.sdk.scheduler.get_job(str(payload['chat'])):
-                self.sdk.scheduler.add_job(
-                    CommandStatistics(self.sdk).stats,
-                    args=[payload],
-                    trigger='cron',
-                    hour=time,
-                    id=str(payload['chat']),
-                    replace_existing=True)
+            self.sdk.scheduler.remove(payload['chat'])
+            self.sdk.scheduler.add(
+                CommandStatistics(self.sdk).stats,
+                chat_id=str(payload['chat']),
+                hour=time,
+                args=[payload]
+            )
             await self.sdk.send_text_to_chat(
                 payload["chat"],
                 "Вы успешно подписались на ежедневный дайджест в {}:00".format(time)
