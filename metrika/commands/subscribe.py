@@ -1,3 +1,4 @@
+from commands.statistics import CommandStatistics
 from .base import CommandBase
 
 
@@ -15,10 +16,11 @@ class CommandSubscribe(CommandBase):
             )
         else:
             self.sdk.db.insert("metrika_schedules", {'chat_id': payload['chat']})
+            payload['command'] = 'today'
             if not self.sdk.scheduler.get_job(str(payload['chat'])):
                 self.sdk.scheduler.add_job(
-                    str(payload['chat']),
-                    args=['today'],
+                    CommandStatistics(self.sdk).stats,
+                    args=[payload],
                     trigger='cron',
                     hour='19',
                     id=str(payload['chat']),
