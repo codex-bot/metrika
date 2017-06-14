@@ -13,12 +13,19 @@ class CommandStart(CommandBase):
         self.sdk.log("/start handler fired with payload {}".format(payload))
 
         message = "Для подключения счетчика, вам нужно авторизовать бота." \
-                  "Для этого перейдите по ссылке и подтвердите доступ:\n" \
-                  "\n" \
-                  "https://oauth.yandex.ru/authorize?" \
-                  "response_type=code&client_id={}&state={}|{}".format(METRIKA_OAUTH_APP_ID, payload['chat'], payload["user"])
+                  "Для этого перейдите по ссылке и подтвердите доступ:"
 
-        await self.sdk.send_text_to_chat(
+        button = [[{
+            'text': 'Авторизовать бота',
+            'url': "https://oauth.yandex.ru/authorize?"
+                   "response_type=code&client_id={}&state={}|{}".format(METRIKA_OAUTH_APP_ID,
+                                                                        payload['chat'],
+                                                                        payload["user"]),
+            'callback_data': ''
+        }]]
+
+        await self.sdk.send_inline_keyboard_to_chat(
             payload["chat"],
-            message
+            message,
+            button
         )
