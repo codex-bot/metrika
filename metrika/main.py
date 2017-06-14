@@ -33,6 +33,8 @@ class Metrika:
 
         self.sdk.set_callback_query_handler(InlineCommandsHandler(self.sdk))
 
+        self.sdk.scheduler.restore(self.processor)
+
         self.sdk.start_server()
 
     @CodexBot.http_response
@@ -50,6 +52,8 @@ class Metrika:
         else:
             return {'status': 404}
 
+    def processor(self, params):
+        return CommandStatistics(self.sdk).stats
 
 if __name__ == "__main__":
     metrika = Metrika()
