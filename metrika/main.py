@@ -20,9 +20,11 @@ class Metrika:
         self.sdk.register_commands([
             ('metrika_help', 'help', CommandHelp(self.sdk)),
             ('metrika_start', 'start', CommandStart(self.sdk)),
-            ('today', 'today', CommandStatistics(self.sdk).today),
             ('metrika_subscribe', 'metrika_subscribe', CommandSubscribe(self.sdk)),
-            ('metrika_unsubscribe', 'metrika_unsubscribe', CommandUnsubscribe(self.sdk))
+            ('metrika_unsubscribe', 'metrika_unsubscribe', CommandUnsubscribe(self.sdk)),
+            ('today', 'today', CommandStatistics(self.sdk).stats),
+            ('weekly', 'weekly', CommandStatistics(self.sdk).stats),
+            ('monthly', 'monthly', CommandStatistics(self.sdk).stats)
         ])
 
         self.sdk.set_routes([

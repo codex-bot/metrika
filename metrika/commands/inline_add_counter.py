@@ -37,7 +37,8 @@ class InlineAddCounter(CommandBase):
                 self.sdk.db.insert('metrika_counters', {
                     'chat_id': chat_id,
                     'counter_id': counter_id,
-                    'user_id': user_id
+                    'user_id': user_id,
+                    'counter_name': counter_name
                 })
                 await self.sdk.send_text_to_chat(
                     payload["chat"],
