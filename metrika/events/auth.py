@@ -32,7 +32,7 @@ class EventAuth(EventBase):
             self.sdk.log("Error: {}".format(e))
             return False
         else:
-            if not self.sdk.db.find_one('metrika_tokens', {'access_token': access_token, 'user_id': user_id}):
+            if not self.sdk.db.find_one(self.COLLECTIONS['counters'], {'access_token': access_token, 'user_id': user_id}):
                 self.sdk.db.insert('metrika_tokens', {
                     'access_token': access_token,
                     'user_id': user_id,

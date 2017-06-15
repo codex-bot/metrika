@@ -1,7 +1,10 @@
+from config import COLLECTIONS
+
 class CommandBase:
 
     def __init__(self, sdk):
         self.sdk = sdk
+        self.COLLECTIONS = COLLECTIONS
 
     def get_chat_counters(self, chat):
         return list(self.sdk.db.find('metrika_counters', {'chat_id': chat}))

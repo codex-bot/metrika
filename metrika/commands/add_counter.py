@@ -30,16 +30,16 @@ class CommandAddCounter(CommandBase):
                     "Ошибка получения имени счётчика"
                 )
 
-            if self.sdk.db.find_one('metrika_counters', {'chat_id': chat_id, 'counter_id': counter_id}):
+            if self.sdk.db.find_one(self.COLLECTIONS['counters'], {'chat_id': chat_id, 'counter_id': counter_id}):
                 await self.sdk.send_text_to_chat(
                     payload["chat"],
                     'Счетчик *{}* уже прикреплен к данному чату.'.format(counter_name),
                     'Markdown'
                 )
             else:
-                user = self.sdk.db.find_one('metrika_tokens', {'access_token': access_token})
+                user = self.sdk.db.find_one(self.COLLECTIONS['tokens'], {'access_token': access_token})
 
-                self.sdk.db.insert('metrika_counters', {
+                self.sdk.db.insert(self.COLLECTIONS['counters'], {
                     'chat_id': chat_id,
                     'counter_id': counter_id,
                     'user_id': user_id,

@@ -16,9 +16,9 @@ class CommandDeleteCounter(CommandBase):
 
             counter_id = inline_params
 
-            counter = self.sdk.db.find_one('metrika_counters', {'chat_id': chat_id, 'counter_id': counter_id})
+            counter = self.sdk.db.find_one(self.COLLECTIONS['counters'], {'chat_id': chat_id, 'counter_id': counter_id})
 
-            self.sdk.db.remove('metrika_counters', {'chat_id': chat_id, 'counter_id': counter_id})
+            self.sdk.db.remove(self.COLLECTIONS['counters'], {'chat_id': chat_id, 'counter_id': counter_id})
 
             await self.sdk.send_text_to_chat(
                 payload["chat"],

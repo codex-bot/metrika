@@ -9,7 +9,7 @@ class CommandAccess(CommandBase):
             await self.remove_user(payload)
             return
 
-        users = list(self.sdk.db.find('metrika_tokens', {'chat_id': payload['chat']}))
+        users = list(self.sdk.db.find(self.COLLECTIONS['tokens'], {'chat_id': payload['chat']}))
 
         buttons = []
 
@@ -28,8 +28,15 @@ class CommandAccess(CommandBase):
     async def remove_user(self, payload):
         user_id = payload['inline_params']
 
-        user = self.sdk.db.find_one('metrika_tokens', {'user_id': user_id})
-        self.sdk.db.remove('metrika_tokens', {'user_id': user_id})
+        user = self.sdk.db.find_one(self.COLLECTIONS['tokens'], {'user_id': user_id})
+
+        if not user:
+            await self.sdk.send_text_to_chat(payload['chat'],
+                                             'Этот пользователь не подключен к чату')
+            return
+
+        self.sdk.db.remove(self.COLLECTIONS['tokens'], {'user_id': user_id})
+        self.sdk.db.remove(self.COLLECTIONS['counters'], {'user_id': user_id})
 
         await self.sdk.send_text_to_chat(payload['chat'],
                                          "Пользователь *@{}* отключен".format(user['user_info']['login']),
