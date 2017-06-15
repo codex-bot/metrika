@@ -8,6 +8,9 @@ from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
 from commands.help import CommandHelp
 from commands.start import CommandStart
 from commands.metrika import CommandMetrika
+from commands.delete_counter import CommandDeleteCounter
+from commands.counters import CommandCounters
+from commands.access import CommandAccess
 
 
 class Metrika:
@@ -20,13 +23,17 @@ class Metrika:
 
         self.sdk.register_commands([
             ('metrika', 'Приложение для Яндекс.Метрики. Умеет присылать статистику посещений сайтов.', CommandMetrika(self.sdk)),
-            ('metrika_help', 'help', CommandHelp(self.sdk)),
-            ('metrika_start', 'start', CommandStart(self.sdk)),
-            ('metrika_subscribe', 'metrika_subscribe', CommandSubscribe(self.sdk)),
-            ('metrika_unsubscribe', 'metrika_unsubscribe', CommandUnsubscribe(self.sdk)),
-            ('today', 'today', CommandStatistics(self.sdk).stats),
-            ('weekly', 'weekly', CommandStatistics(self.sdk).stats),
-            ('monthly', 'monthly', CommandStatistics(self.sdk).stats)
+            ('metrika_help', 'Help', CommandHelp(self.sdk)),
+            ('metrika_start', 'Start', CommandStart(self.sdk)),
+            ('metrika_add', 'Add new metrika user', CommandStart(self.sdk)),
+            ('metrika_subscriptions', 'Everyday statistics', CommandSubscribe(self.sdk)),
+            ('metrika_unsubscribe', 'Unsubscribe', CommandUnsubscribe(self.sdk)),
+            ('metrika_stop', 'Delete counter', CommandDeleteCounter(self.sdk)),
+            ('metrika_counters', 'Available counters', CommandCounters(self.sdk)),
+            ('metrika_access', 'Access settings', CommandAccess(self.sdk)),
+            ('today', 'Today statistics', CommandStatistics(self.sdk).stats),
+            ('weekly', 'Week statistics', CommandStatistics(self.sdk).stats),
+            ('monthly', 'Month statistics', CommandStatistics(self.sdk).stats)
         ])
 
         self.sdk.set_routes([

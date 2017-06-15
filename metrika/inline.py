@@ -1,8 +1,11 @@
-from commands.inline_add_counter import InlineAddCounter
+from commands.add_counter import CommandAddCounter
+from commands.delete_counter import CommandDeleteCounter
 from commands.subscribe import CommandSubscribe
 from commands.unsubscribe import CommandUnsubscribe
 from commands.start import CommandStart
 from commands.help import CommandHelp
+from commands.counters import CommandCounters
+from commands.access import CommandAccess
 
 
 class InlineCommandsHandler:
@@ -11,11 +14,14 @@ class InlineCommandsHandler:
         self.sdk = sdk
 
         self.commands = {
-            'add_counter': InlineAddCounter(self.sdk),
+            'add_counter': CommandAddCounter(self.sdk),
+            'delete_counter': CommandDeleteCounter(self.sdk),
             'subscribe': CommandSubscribe(self.sdk).subscribe,
             'unsubscribe': CommandUnsubscribe(self.sdk),
             'start': CommandStart(self.sdk),
             'help': CommandHelp(self.sdk),
+            'counters': CommandCounters(self.sdk),
+            'access': CommandAccess(self.sdk),
         }
 
     async def __call__(self, payload):
