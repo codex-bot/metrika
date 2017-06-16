@@ -18,7 +18,7 @@ class CommandStatistics(CommandBase):
         :return:
         """
 
-        counters = list(self.sdk.db.find('metrika_counters', {'chat_id': payload["chat"]}))
+        counters = list(self.sdk.db.find(self.COLLECTIONS['counters'], {'chat_id': payload["chat"]}))
 
         if not len(counters):
             return await self.sdk.send_text_to_chat(
@@ -50,7 +50,7 @@ class CommandStatistics(CommandBase):
                                                                       date['minute'])
 
         for counter in counters:
-            user_data = self.sdk.db.find_one('metrika_tokens', {
+            user_data = self.sdk.db.find_one(self.COLLECTIONS['tokens'], {
                 'user_id': counter['user_id']
             })
 
