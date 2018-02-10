@@ -23,4 +23,4 @@ class CommandMetrika(CommandBase):
                 'callback_data': button[1]
             }])
 
-        await self.sdk.send_inline_keyboard_to_chat(payload['chat'], 'Действия:', keyboard)
+        await self.sdk.send_inline_keyboard_to_chat(payload['chat'], 'Выберите действие из списка: ', keyboard)
