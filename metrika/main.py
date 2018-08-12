@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 from commands.subscribe import CommandSubscribe
 from commands.statistics import CommandStatistics
 from commands.unsubscribe import CommandUnsubscribe
