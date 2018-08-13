@@ -63,7 +63,7 @@ class CommandStatistics(CommandBase):
 
             token = user_data['access_token']
 
-            hits, users, users_day = self.get_stats(counter['counter_id'], token, period)
+            hits, users, _ = self.get_stats(counter['counter_id'], token, period)
 
             await self.sdk.send_text_to_chat(payload["chat"],
                        "{}:\n" \
@@ -72,6 +72,7 @@ class CommandStatistics(CommandBase):
 
             if payload['command'] == 'weekly':
                 try:
+                    _, _, users_day = self.get_stats(counter['counter_id'], token, '6daysAgo')
                     url = self.get_graph(users_day)
                     if url:
                         await self.sdk.send_image_to_chat(payload["chat"], url)
@@ -80,7 +81,7 @@ class CommandStatistics(CommandBase):
 
     def get_graph(self, users_day):
         now = datetime.now()
-        axes_labels = [(now - timedelta(i)).strftime("%d.%m") for i in range(now.weekday(), -1, -1)]
+        axes_labels = [(now - timedelta(i)).strftime("%d.%m") for i in range(7, 0, -1)]
         fig = plt.figure(figsize=(6, 3), dpi=80)
         ax = fig.add_subplot(111)
         ax.plot(axes_labels, np.array(users_day), 'b')
