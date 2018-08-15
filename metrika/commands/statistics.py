@@ -81,7 +81,7 @@ class CommandStatistics(CommandBase):
 
     def get_graph(self, users_day):
         now = datetime.now()
-        axes_labels = [(now - timedelta(i)).strftime("%d.%m") for i in range(7, 0, -1)]
+        axes_labels = [(now - timedelta(i)).strftime("%d.%m") for i in range(6, -1, -1)]
         fig = plt.figure(figsize=(6, 3), dpi=80)
         ax = fig.add_subplot(111)
         ax.plot(axes_labels, np.array(users_day), 'b')
