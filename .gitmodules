@@ -1,3 +1,0 @@
-[submodule "metrika/sdk"]
-	path = metrika/sdk
-	url = git@github.com:codex-bot/sdk-python.git
