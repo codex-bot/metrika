@@ -1,6 +1,11 @@
+import io
+
 from .base import CommandBase
 import requests
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import numpy as np
+import pycapella
 
 
 class CommandStatistics(CommandBase):
@@ -49,6 +54,8 @@ class CommandStatistics(CommandBase):
                                                                       date['hour'],
                                                                       date['minute'])
 
+        await self.sdk.send_text_to_chat(payload["chat"], message)
+
         for counter in counters:
             user_data = self.sdk.db.find_one(self.COLLECTIONS['tokens'], {
                 'user_id': counter['user_id']
@@ -56,16 +63,36 @@ class CommandStatistics(CommandBase):
 
             token = user_data['access_token']
 
-            hits, users = self.get_stats(counter['counter_id'], token, period)
+            hits, users, _ = self.get_stats(counter['counter_id'], token, period)
 
-            message += "{}:\n" \
+            await self.sdk.send_text_to_chat(payload["chat"],
+                       "{}:\n" \
                        "{} уникальных посетителей\n" \
-                       "{} просмотров\n\n".format(counter['counter_name'], int(users), int(hits))
+                       "{} просмотров\n\n".format(counter['counter_name'], int(users), int(hits)))
 
-        await self.sdk.send_text_to_chat(
-            payload["chat"],
-            message
-        )
+            if payload['command'] == 'weekly':
+                try:
+                    _, _, users_day = self.get_stats(counter['counter_id'], token, '6daysAgo')
+                    url = self.get_graph(users_day)
+                    if url:
+                        await self.sdk.send_image_to_chat(payload["chat"], url)
+                except:
+                    pass
+
+    def get_graph(self, users_day):
+        now = datetime.now()
+        axes_labels = [(now - timedelta(i)).strftime("%d.%m") for i in range(6, -1, -1)]
+        fig = plt.figure(figsize=(6, 3), dpi=80)
+        ax = fig.add_subplot(111)
+        ax.plot(axes_labels, np.array(users_day), 'b')
+        buf = io.BytesIO()
+        fig.savefig(buf, format='png')
+        try:
+            response = pycapella.Capella().upload_file(buf.getvalue(), raw_input=True)
+        except:
+            return None
+        else:
+            return response['url']
 
     def get_stats(self, counter, token, date1):
         """
@@ -82,13 +109,16 @@ class CommandStatistics(CommandBase):
             'oauth_token': token,
             'metrics': 'ym:s:pageviews,ym:s:users',
             'date1': date1,
-            'date2': 'today'
+            'date2': 'today',
+            'group': 'day'
         }
 
         statistic = requests.get(self.API_URL, params=params, timeout=5).json()
 
         hits, users = statistic['totals'][0]
-        return hits, users
+        users_day = statistic['data'][0]['metrics'][1]
+
+        return hits, users,users_day
 
     @staticmethod
     def get_date():

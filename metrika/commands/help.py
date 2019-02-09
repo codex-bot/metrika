@@ -15,7 +15,8 @@ class CommandHelp(CommandBase):
                   "/metrika_subscriptions - настройка ежедневных отчётов\n" \
                   "/metrika_stop - отключение счетчиков\n" \
                   "/metrika_counters - список подключенных счётчиков\n" \
-                  "/metrika_access - отключение пользователей от чата"
+                  "/metrika_access - отключение пользователей от чата\n" \
+                  "/today, /weekly, /monthly - получить статистику посещений за сегодняшний день/неделю/месяц"
 
         await self.sdk.send_text_to_chat(
             payload["chat"],
