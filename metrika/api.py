@@ -50,7 +50,10 @@ class MetrikaAPI:
         try:
             result_json = requests.get('https://api-metrika.yandex.ru/management/v1/counters',
                                        params=params,
-                                       headers={'Accept': 'application/x-yametrika+json'},
+                                       headers={
+                                           'Accept': 'application/x-yametrika+json',
+                                           'Authorization': 'OAuth {}'.format(access_token)
+                                       },
                                        timeout=5
                                        ).json()
 
@@ -78,8 +81,10 @@ class MetrikaAPI:
         :return: counter_name (JSON)
         """
         url = 'https://api-metrika.yandex.ru/management/v1/counter/{}?oauth_token={}'.format(id, access_token)
-        # TODO: change requests to aiohttp
-        r = requests.get(url=url)
+        r = requests.get(url=url, headers={
+            'Accept': 'application/x-yametrika+json',
+            'Authorization': 'OAuth {}'.format(access_token)
+        })
         json = r.json()
         return "{} ({})".format(json['counter']['name'], json['counter']['site'])
 

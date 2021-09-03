@@ -79,13 +79,17 @@ class CommandStatistics(CommandBase):
 
         params = {
             'id': counter,
-            'oauth_token': token,
             'metrics': 'ym:s:pageviews,ym:s:users',
             'date1': date1,
             'date2': 'today'
         }
 
-        statistic = requests.get(self.API_URL, params=params, timeout=5).json()
+        headers = {
+            'Authorization': 'OAuth {}'.format(token),
+            'Content-Type': 'application/x-yametrika+json'
+        }
+
+        statistic = requests.get(self.API_URL, params=params, timeout=5, headers=headers).json()
 
         hits, users = statistic['totals'][0]
         return hits, users
