@@ -1,6 +1,7 @@
 from .base import CommandBase
 from api import MetrikaAPI
 
+
 class CommandAddCounter(CommandBase):
 
     async def __call__(self, payload):

@@ -2,7 +2,7 @@ from urllib.parse import urlencode
 
 import requests
 
-from config import METRIKA_OAUTH_APP_ID, METRIKA_OAUTH_APP_SECRET
+from settings import METRIKA_OAUTH_APP_ID, METRIKA_OAUTH_APP_SECRET
 
 
 class MetrikaAPI:

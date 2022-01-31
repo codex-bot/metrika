@@ -1,4 +1,5 @@
-from config import COLLECTIONS
+from settings import COLLECTIONS
+
 
 class EventBase:
 

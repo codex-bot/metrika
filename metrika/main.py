@@ -4,7 +4,7 @@ from commands.unsubscribe import CommandUnsubscribe
 from events.auth import EventAuth
 from inline import InlineCommandsHandler
 from sdk.codexbot_sdk import CodexBot
-from config import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER
+from settings import APPLICATION_TOKEN, APPLICATION_NAME, DB, SERVER, RABBITMQ
 from commands.help import CommandHelp
 from commands.start import CommandStart
 from commands.metrika import CommandMetrika
@@ -17,12 +17,14 @@ class Metrika:
 
     def __init__(self):
 
-        self.sdk = CodexBot(APPLICATION_NAME, SERVER['host'], SERVER['port'], db_config=DB, token=APPLICATION_TOKEN)
+        self.sdk = CodexBot(APPLICATION_NAME, SERVER['host'], SERVER['port'], db_config=DB, rabbitmq_host=RABBITMQ,
+                            token=APPLICATION_TOKEN)
 
         self.sdk.log("Metrika module initialized")
 
         self.sdk.register_commands([
-            ('metrika', 'Приложение для Яндекс.Метрики. Умеет присылать статистику посещений сайтов.', CommandMetrika(self.sdk)),
+            ('metrika', 'Приложение для Яндекс.Метрики. Умеет присылать статистику посещений сайтов.',
+             CommandMetrika(self.sdk)),
             ('metrika_help', 'Help', CommandHelp(self.sdk)),
             ('metrika_start', 'Start', CommandStart(self.sdk)),
             ('metrika_add', 'Add new metrika user', CommandStart(self.sdk)),
@@ -63,6 +65,7 @@ class Metrika:
 
     def processor(self, params):
         return CommandStatistics(self.sdk).stats
+
 
 if __name__ == "__main__":
     metrika = Metrika()

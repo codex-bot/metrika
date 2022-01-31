@@ -1,5 +1,5 @@
 from .base import CommandBase
-from config import METRIKA_OAUTH_APP_ID
+from settings import METRIKA_OAUTH_APP_ID
 
 
 class CommandStart(CommandBase):
