@@ -8,3 +8,5 @@ COPY ./requirements.txt /home/metrika/requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
+
+CMD ["python", "main.py"]
