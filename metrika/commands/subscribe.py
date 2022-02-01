@@ -1,4 +1,4 @@
-from commands.statistics import CommandStatistics
+from .statistics import CommandStatistics
 from .base import CommandBase
 
 

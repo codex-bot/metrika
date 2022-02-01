@@ -2,6 +2,7 @@ from events.base import EventBase
 from commands.add_counter import CommandAddCounter
 from api import MetrikaAPI
 
+
 class EventAuth(EventBase):
     """
     Process OAuth Event. Obtain access token and save it to DB.
